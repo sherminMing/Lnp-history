@@ -1,37 +1,18 @@
-name: Sync Code to B Repo  
-  
+name: Sync Repository
+
 on:
   workflow_dispatch:
-  
-jobs:  
-  sync-code:  
-    runs-on: ubuntu-latest  
-    steps:  
-      - name: Checkout A Repo  
-        uses: actions/checkout@v3  
-        with:  
-          ref: develop  
-  
-      - name: Set Git Credentials for B Repo  
-        run: |  
-          git config --global user.name "Smart"  
-          git config --global user.email "1837236006@qq.com"  
-          echo "https://${B_REPO_ACCESS_TOKEN}:@github.com" > ~/.git-credentials  
-          git config --global credential.helper store  
-  
-      - name: Add B Repo as Remote  
-        run: |  
-          git remote add b-repo https://github.com/sherminMing/lnp-history-backup.git
-  
-      - name: Push to B Repo  
-        run: |  
-          git fetch --all  
-          git reset --hard b-repo/develop  
-          git push --force "https://sherminMing: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@github.com/sherminMing/lnp-history-backup.git" develop  
-        env:  
-          B_REPO_ACCESS_TOKEN: ${{ secrets.B_REPO_ACCESS_TOKEN }}  
-  
-      - name: Clean Up Credentials  
-        if: always()  
-        run: |  
-          rm -f ~/.git-credentials
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Sync Repository
+      uses: Andre601/repository-sync
+      env:
+        PAT: ${{ secrets.PAT }}
+        EMAIL: ${{ secrets.EMAIL }}
+        USER: sherminMing
+        OWNER: sherminMing
+        REPO: lnp-history-backup
