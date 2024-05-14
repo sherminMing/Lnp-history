@@ -1,6 +1,6 @@
 name: Sync Code to B Repo  
   
-on:  
+on:
   workflow_dispatch:
   
 jobs:  
@@ -12,25 +12,26 @@ jobs:
         with:  
           ref: develop  
   
-      - name: Clone A Repo  
+      - name: Set Git Credentials for B Repo  
         run: |  
-          git clone "https://${{ secrets.B_REPO_ACCESS_TOKEN }}@github.com/sherminMing/lnp-history.git"  
-          cd lnp-history-backup  
-          git config user.name "sherminMing"  
-          git config user.email "1837236006@qq.com"  
+          git config --global user.name "Smart"  
+          git config --global user.email "1837236006@qq.com"  
+          echo "https://${B_REPO_ACCESS_TOKEN}:@github.com" > ~/.git-credentials  
+          git config --global credential.helper store  
+  
+      - name: Add B Repo as Remote  
+        run: |  
+          git remote add b-repo https://github.com/sherminMing/lnp-history-backup 
   
       - name: Push to B Repo  
         run: |  
-          cd  lnp-history-backup
-          git remote set-url origin "https://${{ secrets.B_REPO_ACCESS_TOKEN }}@github.com/sherminMing/lnp-history-backup.git"  
-          git fetch origin  
-          git checkout develop  
-          git reset --hard origin/develop      
-          git add .  
-          git commit -m "Sync from A's develop to B's develop"  
-          git push origin develop  
+          git fetch --all  
+          git reset --hard b-repo/develop  
+          git push --force "https://${B_REPO_ACCESS_TOKEN}:@github.com/sherminMing/lnp-history-backup " develop  
+        env:  
+          B_REPO_ACCESS_TOKEN: ${{ secrets.B_REPO_ACCESS_TOKEN }}  
   
-      - name: Clean Up  
+      - name: Clean Up Credentials  
         if: always()  
         run: |  
-          rm -rf lnp-history-backup
+          rm -f ~/.git-credentials
