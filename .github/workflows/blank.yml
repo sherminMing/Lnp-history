@@ -1,8 +1,7 @@
 name: Sync Code to B Repo  
-
 on:  
   workflow_dispatch:  
-
+  
 jobs:  
   sync-code:  
     runs-on: ubuntu-latest  
@@ -10,36 +9,16 @@ jobs:
       - name: Checkout A Repo  
         uses: actions/checkout@v3  
         with:  
-          ref: develop  
-
+          ref: dev  
+  
       - name: Add B Repo as Remote  
         run: |  
-          pwd
-          GITLAB_A_REPO="https://github.com/sherminMing/lnp-history.git"  
-          GITLAB_A_BRANCH="develop"  
-
-          GITLAB_B_REPO="https://github.com/sherminMing/lnp-history-backup.git"  
-          GITLAB_B_BRANCH="develop"  
+          git remote add b-repo https://sherminMing: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@github.com/sherminMing/Lnp-history.git
+          git fetch b-repo  
   
-          LOCAL_REPO_DIR=$PROJECT_DIR
-
-          if [ -d "$LOCAL_REPO_DIR" ]; then  
-              rm -rf "$LOCAL_REPO_DIR"  
-          fi  
+      - name: Force Push to B Repo  
+        run: |  
+          git push --force b-repo dev  
   
-          git clone --single-branch -b "$GITLAB_A_BRANCH" "$GITLAB_A_REPO" "$LOCAL_REPO_DIR"  
-            
-          cd "$LOCAL_REPO_DIR"
-            
-          git remote add gitlab_b "$GITLAB_B_REPO"  
-          
-          git pull origin main
-           
-          git push -u gitlab_b "$GITLAB_A_BRANCH:$GITLAB_B_BRANCH"    --force --verbose
-             
-          pwd
-          
-          echo "Code from  GitLab A  $GITLAB_A_BRANCH  GitLab B  $GITLAB_B_BRANCH branch."
-
-
-
+      # 注意：force push会覆盖B仓库的dev分支，请确保这是你想要的行为  
+      # 如果你想要合并而不是覆盖，你需要使用不同的策略（如git pull和git merge）
