@@ -16,8 +16,8 @@ jobs:
         run: |  
           git clone "https://${{ secrets.B_REPO_ACCESS_TOKEN }}@github.com/sherminMing/lnp-history-backup.git"  
           cd lnp-history-backup  
-          git config user.name "GitHub Actions"  
-          git config user.email "actions@github.com"  
+          git config user.name "sherminMing"  
+          git config user.email "1837236006@qq.com"  
   
       - name: Push to B Repo  
         run: |  
