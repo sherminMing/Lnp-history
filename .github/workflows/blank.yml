@@ -14,9 +14,31 @@ jobs:
 
       - name: Add B Repo as Remote  
         run: |  
-          git remote add b-repo https://sherminMing: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@github.com/sherminMing/lnp-history-backup.git 
-          git fetch b-repo  
+          GITLAB_A_REPO="https://github.com/sherminMing/lnp-history.git"  
+          GITLAB_A_BRANCH="develop"  
 
-      - name: Force Push to B Repo  
-        run: |  
-          git push --force b-repo develop  
+          GITLAB_B_REPO="https://github.com/sherminMing/lnp-history-backup.git"  
+          GITLAB_B_BRANCH="develop"  
+  
+          LOCAL_REPO_DIR="/home/userlocal/temp/"  
+
+          if [ -d "$LOCAL_REPO_DIR" ]; then  
+              rm -rf "$LOCAL_REPO_DIR"  
+          fi  
+  
+          git clone --single-branch -b "$GITLAB_A_BRANCH" "$GITLAB_A_REPO" "$LOCAL_REPO_DIR"  
+            
+          cd "$LOCAL_REPO_DIR"
+            
+          git remote add gitlab_b "$GITLAB_B_REPO"  
+          
+          git pull origin main
+           
+          git push -u gitlab_b "$GITLAB_A_BRANCH:$GITLAB_B_BRANCH"    --force --verbose
+             
+          pwd
+          
+          echo "Code from  GitLab A  $GITLAB_A_BRANCH  GitLab B  $GITLAB_B_BRANCH branch."
+
+
+
