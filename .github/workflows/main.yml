@@ -25,7 +25,7 @@ jobs:
           git remote set-url origin "https://${{ secrets.B_REPO_ACCESS_TOKEN }}@github.com/sherminMing/lnp-history-backup.git"  
           git fetch origin  
           git checkout develop  
-          #git reset --hard origin/develop      
+          git reset --hard origin/develop      
           git add .  
           git commit -m "Sync from A's develop to B's develop"  
           git push origin develop  
