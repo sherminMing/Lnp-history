@@ -21,7 +21,7 @@ jobs:
           GITLAB_B_REPO="https://github.com/sherminMing/lnp-history-backup.git"  
           GITLAB_B_BRANCH="develop"  
   
-          LOCAL_REPO_DIR="/home/userlocal/temp/"  
+          LOCAL_REPO_DIR=$PROJECT_DIR/temp
 
           if [ -d "$LOCAL_REPO_DIR" ]; then  
               rm -rf "$LOCAL_REPO_DIR"  
