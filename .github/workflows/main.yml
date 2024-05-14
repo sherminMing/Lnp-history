@@ -1,0 +1,39 @@
+name: Sync Code to B Repo  
+  
+on:  
+  push:  
+    branches:  
+      - develop  
+  
+jobs:  
+  sync-code:  
+    runs-on: ubuntu-latest  
+    steps:  
+      - name: Checkout A Repo  
+        uses: actions/checkout@v3  
+        with:  
+          ref: develop  
+  
+      - name: Clone B Repo  
+        run: |  
+          git clone "https://${{ secrets.B_REPO_ACCESS_TOKEN }}@github.com/sherminMing/lnp-history-backup.git"  
+          cd testB  
+          git config user.name "GitHub Actions"  
+          git config user.email "actions@github.com"  
+  
+      - name: Push to B Repo  
+        run: |  
+          cd testB  
+          git remote set-url origin "https://${{ secrets.B_REPO_ACCESS_TOKEN }}@github.com/sherminMing/lnp-history-backup.git"  
+          git fetch origin  
+          git checkout develop  
+          git reset --hard origin/develop  
+          cp -rf ../* .    
+          git add .  
+          git commit -m "Sync from A's develop to B's develop"  
+          git push origin develop  
+  
+      - name: Clean Up  
+        if: always()  
+        run: |  
+          rm -rf testB
