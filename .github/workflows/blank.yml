@@ -13,12 +13,10 @@ jobs:
   
       - name: Add B Repo as Remote  
         run: |  
-          git remote add b-repo https://sherminMing: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@github.com/sherminMing/Lnp-history.git
+          git remote add b-repo https://sherminMing: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@github.com/sherminMing/lnp-history-backup.git
           git fetch b-repo  
   
       - name: Force Push to B Repo  
         run: |  
           git push --force b-repo develop  
-  
-      # 注意：force push会覆盖B仓库的dev分支，请确保这是你想要的行为  
-      # 如果你想要合并而不是覆盖，你需要使用不同的策略（如git pull和git merge）
+
