@@ -15,13 +15,13 @@ jobs:
       - name: Clone B Repo  
         run: |  
           git clone "https://${{ secrets.B_REPO_ACCESS_TOKEN }}@github.com/sherminMing/lnp-history-backup.git"  
-          cd testB  
+          cd lnp-history-backup  
           git config user.name "GitHub Actions"  
           git config user.email "actions@github.com"  
   
       - name: Push to B Repo  
         run: |  
-          cd testB  
+          cd  lnp-history-backup
           git remote set-url origin "https://${{ secrets.B_REPO_ACCESS_TOKEN }}@github.com/sherminMing/lnp-history-backup.git"  
           git fetch origin  
           git checkout develop  
@@ -34,4 +34,4 @@ jobs:
       - name: Clean Up  
         if: always()  
         run: |  
-          rm -rf testB
+          rm -rf lnp-history-backup
