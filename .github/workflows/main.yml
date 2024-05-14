@@ -12,9 +12,9 @@ jobs:
         with:  
           ref: develop  
   
-      - name: Clone B Repo  
+      - name: Clone A Repo  
         run: |  
-          git clone "https://${{ secrets.B_REPO_ACCESS_TOKEN }}@github.com/sherminMing/lnp-history-backup.git"  
+          git clone "https://${{ secrets.B_REPO_ACCESS_TOKEN }}@github.com/sherminMing/lnp-history.git"  
           cd lnp-history-backup  
           git config user.name "sherminMing"  
           git config user.email "1837236006@qq.com"  
