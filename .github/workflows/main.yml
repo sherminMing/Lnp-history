@@ -1,9 +1,7 @@
 name: Sync Code to B Repo  
   
 on:  
-  push:  
-    branches:  
-      - develop  
+  workflow_dispatch:
   
 jobs:  
   sync-code:  
