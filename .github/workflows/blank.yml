@@ -1,0 +1,22 @@
+name: Sync Code to B Repo  
+
+on:  
+  workflow_dispatch:  
+
+jobs:  
+  sync-code:  
+    runs-on: ubuntu-latest  
+    steps:  
+      - name: Checkout A Repo  
+        uses: actions/checkout@v3  
+        with:  
+          ref: develop  
+
+      - name: Add B Repo as Remote  
+        run: |  
+          git remote add b-repo https://sherminMing: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@github.com/sherminMing/lnp-history-backup.git 
+          git fetch b-repo  
+
+      - name: Force Push to B Repo  
+        run: |  
+          git push --force b-repo develop  
