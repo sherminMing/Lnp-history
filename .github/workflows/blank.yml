@@ -14,6 +14,7 @@ jobs:
 
       - name: Add B Repo as Remote  
         run: |  
+          pwd
           GITLAB_A_REPO="https://github.com/sherminMing/lnp-history.git"  
           GITLAB_A_BRANCH="develop"  
 
