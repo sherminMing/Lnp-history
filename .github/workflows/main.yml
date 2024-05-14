@@ -21,13 +21,13 @@ jobs:
   
       - name: Add B Repo as Remote  
         run: |  
-          git remote add b-repo https://github.com/sherminMing/lnp-history-backup 
+          git remote add b-repo https://github.com/sherminMing/lnp-history-backup.git
   
       - name: Push to B Repo  
         run: |  
           git fetch --all  
           git reset --hard b-repo/develop  
-          git push --force "https://${B_REPO_ACCESS_TOKEN}:@github.com/sherminMing/lnp-history-backup " develop  
+          git push --force "https://${B_REPO_ACCESS_TOKEN}:@github.com/sherminMing/lnp-history-backup.git" develop  
         env:  
           B_REPO_ACCESS_TOKEN: ${{ secrets.B_REPO_ACCESS_TOKEN }}  
   
