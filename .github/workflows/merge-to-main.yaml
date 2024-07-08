@@ -5,7 +5,7 @@ on:
 
 jobs:  
   merge-to-main:
-    name: Merge to main
+    name: Merge code to main
     runs-on: [ ubuntu-latest ]
     steps:
       - name: Checkout  Code
@@ -15,4 +15,7 @@ jobs:
           
       - name: Megre to main
         run: |
-           ls    
+           git checkout main  
+           git pull  
+           git merge --no-ff origin/$GITHUB_REF  
+           git push origin main    
