@@ -1,4 +1,4 @@
-name: Job approver test
+name: Merge to main
 
 on:
   workflow_dispatch:
