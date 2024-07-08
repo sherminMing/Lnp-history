@@ -4,10 +4,45 @@ on:
   workflow_dispatch:
 
 jobs:
-  update-version:
-    name: job1
+  unit-test:
+    name: 1.Unit Tests
     runs-on: [ ubuntu-latest ]
-    environment: stage
+    steps:
+      - name: ls test
+        run: |
+          ls 
+          
+  integration-test:
+    needs: unit-test
+    name: 2.Integration Tests
+    runs-on: [ ubuntu-latest ]
+    steps:
+      - name: ls
+        run: |
+          ls 
+      
+  generate-version-number:
+    name: 3.Generate Version Number
+    runs-on: [ ubuntu-latest ]
+    needs: integration-test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Write Version to File
+        run: |
+          echo "v$(date "+%Y%m%d%H%M%S")" > version.txt  
+          
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: version-artifact
+          path: "version.txt"
+
+  update-pom:
+    needs: generate-version-number
+    name: 4.Increment Version in pom.xml
+    runs-on: [ ubuntu-latest ]
     steps:
       - uses: actions/checkout@v2
         with:
@@ -21,4 +56,134 @@ jobs:
       - name: Read Version from File
         id: versionNumber
         run: |
+          version=$(cat version.txt)  
+          echo "The version of pom.xml is: $version"
+          eval echo "version=$version >> $GITHUB_OUTPUT"
+          
+  maven-build:
+    needs: update-pom
+    name: 5 Maven Build
+    runs-on: [ ubuntu-latest ]
+    steps:
+      - name: ls
+        run: |
           ls 
+  docker-image:
+    needs: maven-build
+    name: 6 Docker Image
+    runs-on: [ ubuntu-latest ]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Download Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: version-artifact
+
+      - name: Read Version from File
+        id: versionNumber
+        run: |
+          version=$(cat version.txt)  
+          echo "The version of docker-image is: $version"
+          eval echo "version=$version >> $GITHUB_OUTPUT"
+          
+  initiate-stage-argo-CD:
+    needs: docker-image
+    name: 7 Initiate Stage Argo CD
+    environment: stage
+    runs-on: [ ubuntu-latest ]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Download Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: version-artifact
+
+      - name: Read Version from File
+        id: versionNumber
+        run: |
+          version=$(cat version.txt)  
+          echo "The version of stage initiate-argo-CD is: $version"
+          eval echo "version=$version >> $GITHUB_OUTPUT"
+          
+  create-tag:
+    name: 8 Create Tag
+    runs-on: [ ubuntu-latest  ]
+    needs: initiate-stage-argo-CD
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Download Artifact
+        uses: actions/download-artifact@v1
+        with:
+          name: version-artifact
+
+      - name: Read Version from File
+        id: versionNumber
+        run: |
+          cd version-artifact  
+          version=$(cat version.txt)  
+          echo "The version of new tag is: $version"
+          eval echo "version=$version >> $GITHUB_OUTPUT"
+  initiate-prod-argo-CD:
+    needs: create-tag
+    name: 9 Initiate Prod Argo CD
+    environment: prod
+    runs-on: [ ubuntu-latest ]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Download Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: version-artifact
+
+      - name: Read Version from File
+        id: versionNumber
+        run: |
+          version=$(cat version.txt)  
+          echo "The version of prod initiate-argo-CD is: $version"
+          eval echo "version=$version >> $GITHUB_OUTPUT"   
+  merge-to-main:
+    needs: initiate-prod-argo-CD
+    name: 10 Merge to main
+    runs-on: [ ubuntu-latest ]
+    steps:
+      - name: Checkout  Code
+        uses: actions/checkout@v2  
+        with:  
+          fetch-depth: 0
+          
+      - name: Megre to main
+        run: |
+           ls    
+          
+  create-release:
+    name: 11 Create release from tag.
+    runs-on: ubuntu-latest
+    needs:  merge-to-main
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Download Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: version-artifact
+
+      - name: Read Version from File
+        id: versionNumber
+        run: |
+          version=$(cat version.txt)  
+          echo "The version of release is: $version"
+          eval echo "version=$version >> $GITHUB_OUTPUT"   
