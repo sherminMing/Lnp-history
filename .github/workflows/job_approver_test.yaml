@@ -3,9 +3,10 @@ name: Job approver test
 on:
   workflow_dispatch:
 
+jobs:
   update-version:
     name: job1
-    runs-on: [ uk-digital-k8s-self-hosted ]
+    runs-on: [ ubuntu-latest ]
     environment: stage
     steps:
       - uses: actions/checkout@v2
@@ -20,4 +21,4 @@ on:
       - name: Read Version from File
         id: versionNumber
         run: |
-         ls 
+          ls 
