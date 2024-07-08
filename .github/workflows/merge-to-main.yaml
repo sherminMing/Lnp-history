@@ -15,6 +15,8 @@ jobs:
           
       - name: Megre to main
         run: |
+           git config --global user.email "automationNoReply@ssnc.com"
+           git config --global user.name "Github Automation"  
            git checkout main  
            git pull  
            git merge --no-ff origin/$GITHUB_REF  
