@@ -16,7 +16,7 @@ jobs:
             touch example.txt
             echo "Hello, world!" >> example.txt
             cat example.txt
-            git checkout release/07/09
+            git checkout -b release/07/09 main 
             git config --global user.email "automationNoReply@ssnc.com"
             git config --global user.name "Github Automation"
             git add .
