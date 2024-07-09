@@ -2,22 +2,23 @@ name: Merge to main
 
 on:
   workflow_dispatch:
-
-jobs:  
-  merge-to-main:
-    name: Merge code to main
-    runs-on: [ ubuntu-latest ]
+  
+jobs:
+  merge-branches:
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout  Code
-        uses: actions/checkout@v2  
-        with:  
-          fetch-depth: 0
-          
-      - name: Megre to main
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Merge release branch to main
         run: |
-           git config --global user.email "automationNoReply@ssnc.com"
-           git config --global user.name "Github Automation"  
-           git checkout main  
-           git pull  
-           git merge --no-ff origin/$GITHUB_REF  
-           git push origin main  
+          BRANCH_TO_MERGE="release/07/08"
+          git checkout --track origin/main
+          git pull origin main
+          git merge $BRANCH_TO_MERGE
+        
+          if [ $? -eq 0 ]; then
+              git push origin main
+          else
+              echo "A merger conflict occurs, manually resolve the conflict and submit it again."
+          fi
