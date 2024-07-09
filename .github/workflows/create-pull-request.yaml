@@ -8,7 +8,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      
+
+      - name: Add file
+        run: |
+            ls
+            touch example.txt
+            echo "Hello, world!" >> example.txt
+            cat example.txt
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
