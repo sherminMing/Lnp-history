@@ -8,7 +8,7 @@ jobs:
     steps:  
       - uses: actions/checkout@v3  
         with:  
-          ref: feature/new-feature  
+          ref: release/07/09
   
       - name: Create Pull Request  
         uses: peter-evans/create-pull-request@v6  
