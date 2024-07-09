@@ -16,6 +16,8 @@ jobs:
             touch example.txt
             echo "Hello, world!" >> example.txt
             cat example.txt
+            git config --global user.email "automationNoReply@ssnc.com"
+            git config --global user.name "Github Automation"
             git add .
             git commit -m "Add file"
             git push
