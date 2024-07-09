@@ -1,4 +1,4 @@
-name: Create production promotion pull request
+name: Create PR
 on:
   workflow_dispatch:
 
@@ -11,7 +11,7 @@ jobs:
           ref: release/07/08
       - name: Reset promotion branch
         run: |
-          git fetch origin main:main
+          git fetch origin main:release/07/08
           git reset --hard main
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
