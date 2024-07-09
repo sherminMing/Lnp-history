@@ -19,3 +19,4 @@ jobs:
             This is an automated pull request created by a GitHub Action.
             Please review and merge as necessary.
           branch: release/07/08
+          base: main
