@@ -12,12 +12,9 @@ jobs:
 
       - name: Merge release branch to main
         run: |
-          BRANCH_TO_MERGE="release/07/09"
-          git checkout main
-          git merge $BRANCH_TO_MERGE --no-commit --no-ff
-        
-          if [ $? -eq 0 ]; then
-              git push origin main
-          else
-              echo "A merger conflict occurs, manually resolve the conflict and submit it again."
-          fi
+            SOURCE_BRANCH="release"
+            TARGET_BRANCH="main"
+            git checkout $TARGET_BRANCH
+            git pull origin $TARGET_BRANCH
+            git merge $SOURCE_BRANCH --no-ff --log="Merge $SOURCE_BRANCH into $TARGET_BRANCH"
+            git push origin $TARGET_BRANCH
