@@ -38,7 +38,7 @@ jobs:
         with:
           name: version-artifact
           path: "version.txt"
-
+          retention-days: 1
   update-pom:
     needs: generate-version-number
     name: 4.Increment Version in pom.xml
